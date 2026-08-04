@@ -8,6 +8,6 @@ public class HomeController {
 
     @GetMapping("/")
     public String hello() {
-        return "Hello, Finances!";
+        return "Hello, Finances! Pipe ✅";
     }
 }

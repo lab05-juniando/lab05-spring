@@ -1,6 +1,6 @@
 package com.lab05.finances.shoppingItem.entity;
 
-import com.lab05.finances.shoppingList.entity.shoppingList;
+import com.lab05.finances.shoppingList.entity.shoppingListEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "shopping_item")
-public class shoppingItem {
+public class shoppingItemEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -27,7 +27,7 @@ public class shoppingItem {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_shopping_list", nullable = false)
-    private shoppingList shoppingList;
+    private shoppingListEntity shoppingList;
 
     @Column(name = "item_name", nullable = false)
     private String itemName;
@@ -47,16 +47,15 @@ public class shoppingItem {
     @Column(name = "purchase_date")
     private LocalDate purchaseDate;
 
-    // Referência à transação financeira gerada quando o item é marcado como comprado
     @Column(name = "id_transaction")
     private UUID transactionId;
 
-    public shoppingItem() {
+    public shoppingItemEntity() {
     }
 
-    public shoppingItem(shoppingList shoppingList, String itemName, BigDecimal itemValue,
-                        String itemDescription, String itemCategory,
-                        Boolean itemStatus, LocalDate purchaseDate) {
+    public shoppingItemEntity(shoppingListEntity shoppingList, String itemName, BigDecimal itemValue,
+                              String itemDescription, String itemCategory,
+                              Boolean itemStatus, LocalDate purchaseDate) {
         this.shoppingList = shoppingList;
         this.itemName = itemName;
         this.itemValue = itemValue;
@@ -74,11 +73,11 @@ public class shoppingItem {
         this.id = id;
     }
 
-    public shoppingList getShoppingList() {
+    public shoppingListEntity getShoppingList() {
         return shoppingList;
     }
 
-    public void setShoppingList(shoppingList shoppingList) {
+    public void setShoppingList(shoppingListEntity shoppingList) {
         this.shoppingList = shoppingList;
     }
 

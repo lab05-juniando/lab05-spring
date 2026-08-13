@@ -5,7 +5,7 @@ Serviço backend responsável pelas transações financeiras e histórico do pro
 - **Base URL (local):** `http://localhost:8080`
 - **Stack:** Java 25 · Spring Boot 4.1.0 · Spring Web · Spring Data JPA · Spring Validation · Spring Boot Actuator · PostgreSQL · Lombok
 
-> ⚠️ **Status atual do projeto:** este serviço está em estágio inicial. Apenas um endpoint REST está implementado até o momento (`HomeController`). As entidades `shoppingList` e `shoppingItem` já existem no domínio (JPA), mas ainda **não possuem Controller/Service/Repository** — ou seja, não há endpoints para criá-las, listá-las, editá-las ou removê-las ainda. Essa parte da documentação (seção 3) descreve os *dados modelados*, não uma API funcional.
+> ⚠️ **Status atual do projeto:** este serviço está em estágio inicial. Apenas um endpoint REST está implementado até o momento (`HomeController`). As entidades `shoppingListEntity` e `shoppingItemEntity` já existem no domínio (JPA), mas ainda **não possuem Controller/Service/Repository** — ou seja, não há endpoints para criá-las, listá-las, editá-las ou removê-las ainda. Essa parte da documentação (seção 3) descreve os *dados modelados*, não uma API funcional.
 
 ---
 
@@ -84,7 +84,7 @@ Estas entidades já existem no código (`@Entity`, mapeadas para PostgreSQL via 
 | Campo | Tipo | Coluna | Obrigatório | Observação |
 |---|---|---|---|---|
 | `id` | `UUID` | `id_item` | gerado automaticamente | chave primária |
-| `shoppingList` | `ShoppingList` | `id_shopping_list` | sim | `@ManyToOne`, `FetchType.LAZY` |
+| `shoppingListEntity` | `ShoppingList` | `id_shopping_list` | sim | `@ManyToOne`, `FetchType.LAZY` |
 | `itemName` | `String` | `item_name` | sim | |
 | `itemValue` | `BigDecimal` | `item_value` | sim | |
 | `itemDescription` | `String` | `item_description` | não | |

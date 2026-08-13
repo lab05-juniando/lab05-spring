@@ -1,6 +1,6 @@
 package com.lab05.finances.shoppingList.entity;
 
-import com.lab05.finances.shoppingItem.entity.shoppingItem;
+import com.lab05.finances.shoppingItem.entity.shoppingItemEntity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -17,31 +17,23 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "shopping_list")
-public class shoppingList {
+public class shoppingListEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_shopping_list", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "shopping_list_name", nullable = false)
-    private String shoppingListName;
-
-    @Column(name = "shopping_list_status", nullable = false)
-    private Boolean shoppingListStatus;
-
     @Column(name = "id_company", nullable = false)
     private UUID companyId;
 
     @OneToMany(mappedBy = "shoppingList", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<shoppingItem> items = new ArrayList<>();
+    private List<shoppingItemEntity> items = new ArrayList<>();
 
-    public shoppingList() {
+    public shoppingListEntity() {
     }
 
-    public shoppingList(String shoppingListName, Boolean shoppingListStatus, UUID companyId) {
-        this.shoppingListName = shoppingListName;
-        this.shoppingListStatus = shoppingListStatus;
+    public shoppingListEntity(UUID companyId) {
         this.companyId = companyId;
     }
 
@@ -53,22 +45,6 @@ public class shoppingList {
         this.id = id;
     }
 
-    public String getShoppingListName() {
-        return shoppingListName;
-    }
-
-    public void setShoppingListName(String shoppingListName) {
-        this.shoppingListName = shoppingListName;
-    }
-
-    public Boolean getShoppingListStatus() {
-        return shoppingListStatus;
-    }
-
-    public void setShoppingListStatus(Boolean shoppingListStatus) {
-        this.shoppingListStatus = shoppingListStatus;
-    }
-
     public UUID getCompanyId() {
         return companyId;
     }
@@ -77,11 +53,11 @@ public class shoppingList {
         this.companyId = companyId;
     }
 
-    public List<shoppingItem> getItems() {
+    public List<shoppingItemEntity> getItems() {
         return items;
     }
 
-    public void setItems(List<shoppingItem> items) {
+    public void setItems(List<shoppingItemEntity> items) {
         this.items = items;
     }
 }

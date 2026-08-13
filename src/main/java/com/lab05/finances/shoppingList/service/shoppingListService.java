@@ -20,6 +20,11 @@ public class shoppingListService {
 
     @Transactional
     public shoppingListEntity create(UUID companyId) {
+        if (shoppingListRepository.existsByCompanyId(companyId)) {
+            throw new IllegalStateException(
+                    "Já existe uma shopping list para a company com id: " + companyId);
+        }
+
         shoppingListEntity entity = new shoppingListEntity(companyId);
         return shoppingListRepository.save(entity);
     }

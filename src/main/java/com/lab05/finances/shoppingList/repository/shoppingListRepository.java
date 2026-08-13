@@ -11,4 +11,6 @@ import java.util.UUID;
 public interface shoppingListRepository extends JpaRepository<shoppingListEntity, UUID> {
 
     List<shoppingListEntity> findByCompanyId(UUID companyId);
+
+    boolean existsByCompanyId(UUID companyId);
 }

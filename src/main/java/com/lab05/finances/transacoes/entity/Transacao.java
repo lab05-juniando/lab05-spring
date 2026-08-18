@@ -3,6 +3,7 @@ package com.lab05.finances.transacoes.entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.UUID;
 
 import jakarta.persistence.*;
 
@@ -13,6 +14,9 @@ public class Transacao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "id_company", nullable = false)
+    private UUID companyId;
 
     @Column(nullable = false)
     private String descricao;
@@ -30,14 +34,12 @@ public class Transacao {
     @Column(length = 500)
     private String observacao;
 
-    // Construtor vazio exigido pelo JPA
     public Transacao() {
     }
 
-    // Construtor
-    public Transacao(String descricao, BigDecimal valor, LocalDate data,
+    public Transacao(UUID companyId, String descricao, BigDecimal valor, LocalDate data,
                      TipoTransacao tipo, String observacao) {
-
+        this.companyId = companyId;
         this.descricao = descricao;
         this.valor = valor;
         this.data = data;
@@ -45,14 +47,20 @@ public class Transacao {
         this.observacao = observacao;
     }
 
-    // Getters e Setters
-
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public UUID getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(UUID companyId) {
+        this.companyId = companyId;
     }
 
     public String getDescricao() {
@@ -95,20 +103,20 @@ public class Transacao {
         this.observacao = observacao;
     }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Transacao other = (Transacao) obj;
-		return Objects.equals(id, other.id);
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Transacao other = (Transacao) obj;
+        return Objects.equals(id, other.id);
+    }
 }

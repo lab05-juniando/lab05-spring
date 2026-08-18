@@ -14,26 +14,26 @@ import java.util.UUID;
 public interface TransacaoRepository extends JpaRepository<Transacao, Long> {
 
     @Query("""
-        SELECT COALESCE(SUM(t.valor), 0)
+        SELECT COALESCE(SUM(t.amount), 0)
         FROM Transacao t
         WHERE t.companyId = :companyId
-          AND t.tipo = :tipo
-          AND t.data BETWEEN :inicio AND :fim
+          AND t.type = :type
+          AND t.date BETWEEN :start AND :end
         """)
-    BigDecimal sumPorTipoEPeriodo(@Param("companyId") UUID companyId,
-                                  @Param("tipo") TipoTransacao tipo,
-                                  @Param("inicio") LocalDate inicio,
-                                  @Param("fim") LocalDate fim);
+    BigDecimal sumByTypeAndPeriod(@Param("companyId") UUID companyId,
+                                  @Param("type") TipoTransacao type,
+                                  @Param("start") LocalDate start,
+                                  @Param("end") LocalDate end);
 
     @Query("""
-        SELECT t.data as data, t.tipo as tipo, SUM(t.valor) as total
+        SELECT t.date as date, t.type as type, SUM(t.amount) as total
         FROM Transacao t
         WHERE t.companyId = :companyId
-          AND t.data BETWEEN :inicio AND :fim
-        GROUP BY t.data, t.tipo
-        ORDER BY t.data
+          AND t.date BETWEEN :start AND :end
+        GROUP BY t.date, t.type
+        ORDER BY t.date
         """)
-    List<Object[]> sumAgrupadoPorDiaETipo(@Param("companyId") UUID companyId,
-                                          @Param("inicio") LocalDate inicio,
-                                          @Param("fim") LocalDate fim);
+    List<Object[]> sumGroupedByDayAndType(@Param("companyId") UUID companyId,
+                                          @Param("start") LocalDate start,
+                                          @Param("end") LocalDate end);
 }

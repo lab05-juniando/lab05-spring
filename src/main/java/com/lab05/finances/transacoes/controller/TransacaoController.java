@@ -39,8 +39,8 @@ public class TransacaoController {
     }
 
     @PostMapping
-    public Transacao insert(@RequestBody Transacao obj) {
-        return service.insert(obj);
+    public Transacao insert(@RequestBody Transacao transacao) {
+        return service.insert(transacao);
     }
 
     @DeleteMapping("/{id}")
@@ -52,17 +52,17 @@ public class TransacaoController {
     @PutMapping("/{id}")
     public Transacao update(
             @PathVariable Long id,
-            @RequestBody Transacao obj) {
+            @RequestBody Transacao transacao) {
 
-        return service.update(id, obj);
+        return service.update(id, transacao);
     }
 
     @GetMapping("/dashboard")
     public DashboardResponseDTO dashboard(
             @RequestParam UUID companyId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim) {
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
 
-        return service.getDashboard(companyId, inicio, fim);
+        return service.getDashboard(companyId, start, end);
     }
 }

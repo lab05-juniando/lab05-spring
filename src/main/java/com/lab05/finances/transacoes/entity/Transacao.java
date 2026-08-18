@@ -18,33 +18,33 @@ public class Transacao {
     @Column(name = "id_company", nullable = false)
     private UUID companyId;
 
-    @Column(nullable = false)
-    private String descricao;
+    @Column(name = "descricao", nullable = false)
+    private String description;
 
-    @Column(nullable = false, precision = 15, scale = 2)
-    private BigDecimal valor;
+    @Column(name = "valor", nullable = false, precision = 15, scale = 2)
+    private BigDecimal amount;
 
-    @Column(nullable = false)
-    private LocalDate data;
+    @Column(name = "data", nullable = false)
+    private LocalDate date;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private TipoTransacao tipo;
+    @Column(name = "tipo", nullable = false)
+    private TipoTransacao type;
 
-    @Column(length = 500)
-    private String observacao;
+    @Column(name = "observacao", length = 500)
+    private String note;
 
     public Transacao() {
     }
 
-    public Transacao(UUID companyId, String descricao, BigDecimal valor, LocalDate data,
-                     TipoTransacao tipo, String observacao) {
+    public Transacao(UUID companyId, String description, BigDecimal amount, LocalDate date,
+                     TipoTransacao type, String note) {
         this.companyId = companyId;
-        this.descricao = descricao;
-        this.valor = valor;
-        this.data = data;
-        this.tipo = tipo;
-        this.observacao = observacao;
+        this.description = description;
+        this.amount = amount;
+        this.date = date;
+        this.type = type;
+        this.note = note;
     }
 
     public Long getId() {
@@ -63,44 +63,44 @@ public class Transacao {
         this.companyId = companyId;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public BigDecimal getValor() {
-        return valor;
+    public BigDecimal getAmount() {
+        return amount;
     }
 
-    public void setValor(BigDecimal valor) {
-        this.valor = valor;
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 
-    public LocalDate getData() {
-        return data;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setData(LocalDate data) {
-        this.data = data;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
-    public TipoTransacao getTipo() {
-        return tipo;
+    public TipoTransacao getType() {
+        return type;
     }
 
-    public void setTipo(TipoTransacao tipo) {
-        this.tipo = tipo;
+    public void setType(TipoTransacao type) {
+        this.type = type;
     }
 
-    public String getObservacao() {
-        return observacao;
+    public String getNote() {
+        return note;
     }
 
-    public void setObservacao(String observacao) {
-        this.observacao = observacao;
+    public void setNote(String note) {
+        this.note = note;
     }
 
     @Override

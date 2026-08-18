@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.lab05.finances.transacoes.dto.DashboardResponseDTO;
-import com.lab05.finances.transacoes.dto.DashboardResponseDTO.FluxoCaixaDTO;
+import com.lab05.finances.transacoes.dto.DashboardResponseDTO.CashFlowDTO;
 import com.lab05.finances.transacoes.entity.Transacao;
 import com.lab05.finances.transacoes.entity.TipoTransacao;
 import com.lab05.finances.transacoes.repository.TransacaoRepository;
@@ -24,18 +24,18 @@ public class TransacaoService {
 	@Autowired
 	private TransacaoRepository repository;
 
-	//Retorna lista com todos registros da tabela transacao
+	// Retorna lista com todos registros da tabela transacao
 	public List<Transacao> findAll(){
 		return repository.findAll();
 	}
 
-	public Transacao findById(Long id) {// repository.findById() retorna um Optional, que pode conter ou não um User
+	public Transacao findById(Long id) {
 		Optional<Transacao> obj = repository.findById(id);
 		return obj.orElseThrow();
 	}
 
-	public Transacao insert(Transacao obj) {
-		return repository.save(obj);
+	public Transacao insert(Transacao transacao) {
+		return repository.save(transacao);
 	}
 
 	public void delete(Long id) {
@@ -45,40 +45,40 @@ public class TransacaoService {
 		repository.deleteById(id);
 	}
 
-	public Transacao update(Long id, Transacao obj) {
+	public Transacao update(Long id, Transacao transacao) {
 		Transacao entity = repository.findById(id)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transação não encontrada"));
-		updateData(entity, obj);
+		updateData(entity, transacao);
 		return repository.save(entity);
 	}
 
-	private void updateData(Transacao entity, Transacao obj) {
-		entity.setDescricao(obj.getDescricao());
-		entity.setValor(obj.getValor());
-		entity.setData(obj.getData());
-		entity.setTipo(obj.getTipo());
-		entity.setObservacao(obj.getObservacao());
+	private void updateData(Transacao entity, Transacao transacao) {
+		entity.setDescription(transacao.getDescription());
+		entity.setAmount(transacao.getAmount());
+		entity.setDate(transacao.getDate());
+		entity.setType(transacao.getType());
+		entity.setNote(transacao.getNote());
 	}
 
-	public DashboardResponseDTO getDashboard(UUID companyId, LocalDate inicio, LocalDate fim) {
+	public DashboardResponseDTO getDashboard(UUID companyId, LocalDate start, LocalDate end) {
 
-		BigDecimal entradas = repository.sumPorTipoEPeriodo(companyId, TipoTransacao.RECEITA, inicio, fim);
-		BigDecimal saidas = repository.sumPorTipoEPeriodo(companyId, TipoTransacao.DESPESA, inicio, fim);
-		BigDecimal saldo = entradas.subtract(saidas);
+		BigDecimal income = repository.sumByTypeAndPeriod(companyId, TipoTransacao.RECEITA, start, end);
+		BigDecimal expenses = repository.sumByTypeAndPeriod(companyId, TipoTransacao.DESPESA, start, end);
+		BigDecimal balance = income.subtract(expenses);
 
-		// TODO: previsao ainda é um placeholder — a definir regra de cálculo real
-		BigDecimal previsao = saldo;
+		// TODO: forecast ainda é um placeholder — a definir regra de cálculo real
+		BigDecimal forecast = balance;
 
-		List<Object[]> agrupado = repository.sumAgrupadoPorDiaETipo(companyId, inicio, fim);
+		List<Object[]> grouped = repository.sumGroupedByDayAndType(companyId, start, end);
 
-		List<FluxoCaixaDTO> fluxoCaixa = new ArrayList<>();
-		for (Object[] linha : agrupado) {
-			LocalDate data = (LocalDate) linha[0];
-			TipoTransacao tipo = (TipoTransacao) linha[1];
-			BigDecimal total = (BigDecimal) linha[2];
-			fluxoCaixa.add(new FluxoCaixaDTO(data, tipo, total));
+		List<CashFlowDTO> cashFlow = new ArrayList<>();
+		for (Object[] row : grouped) {
+			LocalDate date = (LocalDate) row[0];
+			TipoTransacao type = (TipoTransacao) row[1];
+			BigDecimal total = (BigDecimal) row[2];
+			cashFlow.add(new CashFlowDTO(date, type, total));
 		}
 
-		return new DashboardResponseDTO(saldo, entradas, saidas, previsao, fluxoCaixa);
+		return new DashboardResponseDTO(balance, income, expenses, forecast, cashFlow);
 	}
 }

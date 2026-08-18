@@ -7,16 +7,16 @@ import java.util.List;
 import com.lab05.finances.transacoes.entity.TipoTransacao;
 
 public record DashboardResponseDTO(
-        BigDecimal saldo,
-        BigDecimal entradas,
-        BigDecimal saidas,
-        BigDecimal previsao,
-        List<FluxoCaixaDTO> fluxoCaixa
+        BigDecimal balance,
+        BigDecimal income,
+        BigDecimal expenses,
+        BigDecimal forecast,
+        List<CashFlowDTO> cashFlow
 ) {
 
-    public record FluxoCaixaDTO(
-            LocalDate data,
-            TipoTransacao tipo,
+    public record CashFlowDTO(
+            LocalDate date,
+            TipoTransacao type,
             BigDecimal total
     ) {
     }

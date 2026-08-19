@@ -3,6 +3,7 @@ package com.lab05.finances.transacoes.entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.UUID;
 
 import jakarta.persistence.*;
 
@@ -14,38 +15,37 @@ public class Transacao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String descricao;
+    @Column(name = "id_company", nullable = false)
+    private UUID companyId;
 
-    @Column(nullable = false, precision = 15, scale = 2)
-    private BigDecimal valor;
+    @Column(name = "descricao", nullable = false)
+    private String description;
 
-    @Column(nullable = false)
-    private LocalDate data;
+    @Column(name = "valor", nullable = false, precision = 15, scale = 2)
+    private BigDecimal amount;
+
+    @Column(name = "data", nullable = false)
+    private LocalDate date;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private TipoTransacao tipo;
+    @Column(name = "tipo", nullable = false)
+    private TipoTransacao type;
 
-    @Column(length = 500)
-    private String observacao;
+    @Column(name = "observacao", length = 500)
+    private String note;
 
-    // Construtor vazio exigido pelo JPA
     public Transacao() {
     }
 
-    // Construtor
-    public Transacao(String descricao, BigDecimal valor, LocalDate data,
-                     TipoTransacao tipo, String observacao) {
-
-        this.descricao = descricao;
-        this.valor = valor;
-        this.data = data;
-        this.tipo = tipo;
-        this.observacao = observacao;
+    public Transacao(UUID companyId, String description, BigDecimal amount, LocalDate date,
+                     TipoTransacao type, String note) {
+        this.companyId = companyId;
+        this.description = description;
+        this.amount = amount;
+        this.date = date;
+        this.type = type;
+        this.note = note;
     }
-
-    // Getters e Setters
 
     public Long getId() {
         return id;
@@ -55,60 +55,68 @@ public class Transacao {
         this.id = id;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public UUID getCompanyId() {
+        return companyId;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setCompanyId(UUID companyId) {
+        this.companyId = companyId;
     }
 
-    public BigDecimal getValor() {
-        return valor;
+    public String getDescription() {
+        return description;
     }
 
-    public void setValor(BigDecimal valor) {
-        this.valor = valor;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public LocalDate getData() {
-        return data;
+    public BigDecimal getAmount() {
+        return amount;
     }
 
-    public void setData(LocalDate data) {
-        this.data = data;
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 
-    public TipoTransacao getTipo() {
-        return tipo;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setTipo(TipoTransacao tipo) {
-        this.tipo = tipo;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
-    public String getObservacao() {
-        return observacao;
+    public TipoTransacao getType() {
+        return type;
     }
 
-    public void setObservacao(String observacao) {
-        this.observacao = observacao;
+    public void setType(TipoTransacao type) {
+        this.type = type;
     }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
+    public String getNote() {
+        return note;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Transacao other = (Transacao) obj;
-		return Objects.equals(id, other.id);
-	}
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Transacao other = (Transacao) obj;
+        return Objects.equals(id, other.id);
+    }
 }

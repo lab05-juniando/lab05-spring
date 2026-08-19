@@ -1,5 +1,9 @@
 package com.lab05.finances.shoppingItem.entity;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.UUID;
+
 import com.lab05.finances.shoppingList.entity.shoppingListEntity;
 
 import jakarta.persistence.Column;
@@ -12,14 +16,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.UUID;
 
 @Entity
 @Table(name = "shopping_item")
 public class shoppingItemEntity {
 
+    
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_item", updatable = false, nullable = false)
@@ -64,6 +66,11 @@ public class shoppingItemEntity {
         this.itemStatus = itemStatus;
         this.purchaseDate = purchaseDate;
     }
+    public void marcarComoComprado() {
+    this.itemStatus = true;
+    this.purchaseDate = LocalDate.now();
+ }
+
 
     public UUID getId() {
         return id;

@@ -2,6 +2,7 @@ package com.lab05.finances.transacoes.repository;
 
 import com.lab05.finances.transacoes.entity.Transacao;
 import com.lab05.finances.transacoes.entity.TipoTransacao;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -36,4 +37,7 @@ public interface TransacaoRepository extends JpaRepository<Transacao, Long> {
     List<Object[]> sumGroupedByDayAndType(@Param("companyId") UUID companyId,
                                           @Param("start") LocalDate start,
                                           @Param("end") LocalDate end);
+
+    // Busca as transações mais recentes de uma empresa, mais novas primeiro
+    List<Transacao> findByCompanyIdOrderByDateDescIdDesc(UUID companyId, Pageable pageable);
 }

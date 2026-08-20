@@ -61,8 +61,9 @@ public class TransacaoController {
     public DashboardResponseDTO dashboard(
             @RequestParam UUID companyId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end,
+            @RequestParam(required = false, defaultValue = "5") int limit) {
 
-        return service.getDashboard(companyId, start, end);
+        return service.getDashboard(companyId, start, end, limit);
     }
 }

@@ -1,6 +1,7 @@
 package com.lab05.finances.transacoes.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -113,6 +114,9 @@ public class TransacaoService {
 
 		// currentBalance = saldo atual da empresa, independente do período filtrado
 		BigDecimal currentBalance = companyBalanceService.getCurrentBalance(companyId);
+		BigDecimal saldoEntrada = saldoEntrada(companyId, end);
+		BigDecimal saldoSaida = saldoSaida(companyId, end);
+		BigDecimal monthlyBalanceChangePercentage = getMonthlyBalanceChangePercentage(companyId, end);
 
 		// TODO: forecast ainda é um placeholder — a definir regra de cálculo real
 		BigDecimal forecast = balance;
@@ -142,6 +146,55 @@ public class TransacaoService {
 			));
 		}
 
-		return new DashboardResponseDTO(balance, currentBalance, income, expenses, forecast, cashFlow, recentTransactions);
+		return new DashboardResponseDTO(balance, currentBalance, saldoEntrada, saldoSaida, monthlyBalanceChangePercentage, income, expenses,
+				forecast, cashFlow, recentTransactions);
+	}
+
+	public BigDecimal saldoEntrada(UUID companyId, LocalDate referenceDate) {
+		LocalDate currentMonthStart = referenceDate.withDayOfMonth(1);
+		BigDecimal total = BigDecimal.ZERO;
+
+		for (int monthOffset = 0; monthOffset < 3; monthOffset++) {
+			LocalDate monthStart = currentMonthStart.minusMonths(monthOffset);
+			LocalDate monthEnd = monthStart.withDayOfMonth(monthStart.lengthOfMonth());
+			total = total.add(repository.sumByTypeAndPeriod(companyId, TipoTransacao.RECEITA, monthStart, monthEnd));
+		}
+
+		return total.divide(BigDecimal.valueOf(3), 2, RoundingMode.HALF_UP);
+	}
+
+	public BigDecimal saldoSaida(UUID companyId, LocalDate referenceDate) {
+		LocalDate monthStart = referenceDate.withDayOfMonth(1);
+		LocalDate monthEnd = monthStart.withDayOfMonth(monthStart.lengthOfMonth());
+		BigDecimal income = repository.sumByTypeAndPeriod(companyId, TipoTransacao.RECEITA, monthStart, monthEnd);
+		BigDecimal expenses = repository.sumByTypeAndPeriod(companyId, TipoTransacao.DESPESA, monthStart, monthEnd);
+
+		if (income.compareTo(BigDecimal.ZERO) == 0) {
+			return null;
+		}
+
+		return expenses.divide(income, 4, RoundingMode.HALF_UP)
+				.multiply(BigDecimal.valueOf(100))
+				.setScale(2, RoundingMode.HALF_UP);
+	}
+
+	//Saldo
+	public BigDecimal getMonthlyBalanceChangePercentage(UUID companyId, LocalDate referenceDate) {
+		LocalDate currentMonthStart = referenceDate.withDayOfMonth(1);
+		LocalDate currentMonthEnd = referenceDate.withDayOfMonth(referenceDate.lengthOfMonth());
+		LocalDate previousMonthStart = currentMonthStart.minusMonths(1);
+		LocalDate previousMonthEnd = currentMonthStart.minusDays(1);
+
+		BigDecimal currentMonthBalance = repository.sumBalanceByPeriod(companyId, currentMonthStart, currentMonthEnd);
+		BigDecimal previousMonthBalance = repository.sumBalanceByPeriod(companyId, previousMonthStart, previousMonthEnd);
+
+		if (previousMonthBalance.compareTo(BigDecimal.ZERO) == 0) {
+			return null;
+		}
+
+		return currentMonthBalance.subtract(previousMonthBalance)
+				.divide(previousMonthBalance, 4, RoundingMode.HALF_UP)
+				.multiply(BigDecimal.valueOf(100))
+				.setScale(2, RoundingMode.HALF_UP);
 	}
 }

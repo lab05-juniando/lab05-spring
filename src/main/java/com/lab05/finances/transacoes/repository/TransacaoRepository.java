@@ -27,6 +27,17 @@ public interface TransacaoRepository extends JpaRepository<Transacao, Long> {
                                   @Param("end") LocalDate end);
 
     @Query("""
+        SELECT COALESCE(SUM(CASE WHEN t.type = com.lab05.finances.transacoes.entity.TipoTransacao.RECEITA
+                                 THEN t.amount ELSE -t.amount END), 0)
+        FROM Transacao t
+        WHERE t.companyId = :companyId
+          AND t.date BETWEEN :start AND :end
+        """)
+    BigDecimal sumBalanceByPeriod(@Param("companyId") UUID companyId,
+                                  @Param("start") LocalDate start,
+                                  @Param("end") LocalDate end);
+
+    @Query("""
         SELECT t.date as date, t.type as type, SUM(t.amount) as total
         FROM Transacao t
         WHERE t.companyId = :companyId

@@ -12,6 +12,9 @@ public record DashboardResponseDTO(
         BigDecimal balance,
         // currentBalance = saldo atual da empresa, independente do período
         BigDecimal currentBalance,
+        BigDecimal saldoEntrada,
+        BigDecimal saldoSaida,
+        BigDecimal monthlyBalanceChangePercentage,
         BigDecimal income,
         BigDecimal expenses,
         BigDecimal forecast,

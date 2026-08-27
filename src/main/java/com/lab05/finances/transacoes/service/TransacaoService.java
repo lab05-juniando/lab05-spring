@@ -11,11 +11,10 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
+import com.lab05.finances.exceptions.ResourceNotFoundException;
 import com.lab05.finances.transacoes.dto.DashboardResponseDTO;
 import com.lab05.finances.transacoes.dto.DashboardResponseDTO.CashFlowDTO;
 import com.lab05.finances.transacoes.dto.DashboardResponseDTO.RecentTransactionDTO;
@@ -41,8 +40,8 @@ public class TransacaoService {
 	}
 
 	public Transacao findById(Long id) {
-		Optional<Transacao> obj = repository.findById(id);
-		return obj.orElseThrow();
+		return repository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Transacao", id));
 	}
 
 	@Transactional
@@ -55,7 +54,7 @@ public class TransacaoService {
 	@Transactional
 	public void delete(Long id) {
 		Transacao entity = repository.findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transação não encontrada"));
+				.orElseThrow(() -> new ResourceNotFoundException("Transacao", id));
 
 		repository.deleteById(id);
 		companyBalanceService.reverseTransaction(entity.getCompanyId(), entity.getAmount(), entity.getType());
@@ -64,7 +63,7 @@ public class TransacaoService {
 	@Transactional
 	public Transacao update(Long id, Transacao transacao) {
 		Transacao entity = repository.findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transação não encontrada"));
+				.orElseThrow(() -> new ResourceNotFoundException("Transacao", id));
 
 		UUID oldCompanyId = entity.getCompanyId();
 		BigDecimal oldAmount = entity.getAmount();

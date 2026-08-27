@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import jakarta.validation.Valid;
 
 import com.lab05.finances.transacoes.dto.DashboardResponseDTO;
 import com.lab05.finances.transacoes.entity.Transacao;
@@ -39,7 +41,7 @@ public class TransacaoController {
     }
 
     @PostMapping
-    public Transacao insert(@RequestBody Transacao transacao) {
+    public Transacao insert(@Valid @RequestBody Transacao transacao) {
         return service.insert(transacao);
     }
 
@@ -52,7 +54,7 @@ public class TransacaoController {
     @PutMapping("/{id}")
     public Transacao update(
             @PathVariable Long id,
-            @RequestBody Transacao transacao) {
+            @Valid @RequestBody Transacao transacao) {
 
         return service.update(id, transacao);
     }

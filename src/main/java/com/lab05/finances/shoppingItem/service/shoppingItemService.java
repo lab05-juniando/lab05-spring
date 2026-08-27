@@ -6,6 +6,7 @@ import com.lab05.finances.shoppingItem.entity.shoppingItemEntity;
 import com.lab05.finances.shoppingItem.repository.shoppingItemRepository;
 import com.lab05.finances.shoppingList.entity.shoppingListEntity;
 import com.lab05.finances.shoppingList.repository.shoppingListRepository;
+import com.lab05.finances.exceptions.ResourceNotFoundException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,8 +30,7 @@ public class shoppingItemService {
     @Transactional
     public shoppingItemResponseDTO create(shoppingItemRequestDTO dto) {
         shoppingListEntity list = shoppingListRepository.findById(dto.getShoppingListId())
-                .orElseThrow(() -> new RuntimeException(
-                        "Shopping list não encontrada com id: " + dto.getShoppingListId()));
+                .orElseThrow(() -> new ResourceNotFoundException("ShoppingList", dto.getShoppingListId()));
 
         shoppingItemEntity entity = new shoppingItemEntity(
                 list,
@@ -49,7 +49,7 @@ public class shoppingItemService {
     @Transactional(readOnly = true)
     public shoppingItemResponseDTO findById(UUID id) {
         shoppingItemEntity entity = shoppingItemRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Item não encontrado com id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("ShoppingItem", id));
         return toResponseDTO(entity);
     }
 
@@ -72,13 +72,12 @@ public class shoppingItemService {
     @Transactional
     public shoppingItemResponseDTO update(UUID id, shoppingItemRequestDTO dto) {
         shoppingItemEntity entity = shoppingItemRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Item não encontrado com id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("ShoppingItem", id));
 
         if (dto.getShoppingListId() != null
                 && !dto.getShoppingListId().equals(entity.getShoppingList().getId())) {
             shoppingListEntity list = shoppingListRepository.findById(dto.getShoppingListId())
-                    .orElseThrow(() -> new RuntimeException(
-                            "Shopping list não encontrada com id: " + dto.getShoppingListId()));
+                    .orElseThrow(() -> new ResourceNotFoundException("ShoppingList", dto.getShoppingListId()));
             entity.setShoppingList(list);
         }
 

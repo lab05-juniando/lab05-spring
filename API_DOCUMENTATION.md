@@ -11,7 +11,15 @@ Serviço backend responsável pelas transações financeiras e histórico do pro
 
 ## 1. Autenticação
 
-O `application-dev.properties` já define `jwt.secret` e `jwt.expiration`, indicando que autenticação via JWT está planejada. No entanto, **não há filtro de segurança, endpoint de login/registro nem dependência de Spring Security no `pom.xml`** — a autenticação ainda não está implementada no código atual. Nenhum endpoint exige token hoje.
+Os endpoints da aplicação exigem um JWT no header `Authorization`. O filtro valida localmente a assinatura e a expiração do token usando `jwt.secret`.
+
+As únicas rotas públicas são `GET /` e `GET /actuator/health`. Este projeto não possui endpoint de login/registro; o token deve ser obtido no serviço de autenticação que o emite com o mesmo secret e enviado no formato:
+
+```http
+Authorization: Bearer <seu-jwt>
+```
+
+Sem esse header, a API responde `401 Unauthorized` com a mensagem `Header Authorization Bearer ausente`.
 
 ---
 
@@ -43,7 +51,24 @@ curl http://localhost:8080/
 
 ---
 
-### 2.2 `GET /actuator/health`
+### 2.2 `GET /transacoes`
+
+Retorna todas as transacoes. Requer autenticacao JWT.
+
+| | |
+|---|---|
+| **Metodo** | `GET` |
+| **Path** | `/transacoes` |
+| **Autenticacao** | `Authorization: Bearer <seu-jwt>` |
+
+**Exemplo (curl)**
+```bash
+curl -H "Authorization: Bearer <seu-jwt>" http://localhost:8080/transacoes
+```
+
+---
+
+### 2.3 `GET /actuator/health`
 
 Endpoint padrão do **Spring Boot Actuator**, usado para health check da aplicação (ex.: liveness/readiness em pipelines de deploy).
 

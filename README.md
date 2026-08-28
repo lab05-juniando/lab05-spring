@@ -39,3 +39,13 @@ Backend service responsible for financial transactions and history in the Lab05 
 ```
 GET http://localhost:8080/actuator/health
 ```
+
+## Autenticacao
+
+As rotas de negocio, incluindo `GET /transacoes`, exigem um JWT no header HTTP:
+
+```http
+Authorization: Bearer <seu-jwt>
+```
+
+Este servico nao possui login/registro. Use um token emitido pelo servico de autenticacao configurado com o mesmo `JWT_SECRET`.

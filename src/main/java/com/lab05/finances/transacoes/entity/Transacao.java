@@ -6,6 +6,9 @@ import java.util.Objects;
 import java.util.UUID;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "transacoes")
@@ -16,19 +19,25 @@ public class Transacao {
     private Long id;
 
     @Column(name = "id_company", nullable = false)
+    @NotNull(message = "companyId é obrigatório")
     private UUID companyId;
 
     @Column(name = "descricao", nullable = false)
+    @NotBlank(message = "description é obrigatório")
     private String description;
 
     @Column(name = "valor", nullable = false, precision = 15, scale = 2)
+    @NotNull(message = "amount é obrigatório")
+    @DecimalMin(value = "0.01", message = "amount deve ser maior que zero")
     private BigDecimal amount;
 
     @Column(name = "data", nullable = false)
+    @NotNull(message = "date é obrigatório")
     private LocalDate date;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo", nullable = false)
+    @NotNull(message = "type é obrigatório")
     private TipoTransacao type;
 
     @Column(name = "observacao", length = 500)

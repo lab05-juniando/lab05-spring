@@ -4,10 +4,19 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 public class shoppingItemRequestDTO {
 
+    @NotNull(message = "shoppingListId é obrigatório")
     private UUID shoppingListId;
+    @NotNull(message = "itemName é obrigatório")
+    @Size(min = 1, max = 255, message = "itemName deve ter entre 1 e 255 caracteres")
     private String itemName;
+    @NotNull(message = "itemValue é obrigatório")
+    @DecimalMin(value = "0.00", inclusive = true, message = "itemValue não pode ser negativo")
     private BigDecimal itemValue;
     private String itemDescription;
     private String itemCategory;

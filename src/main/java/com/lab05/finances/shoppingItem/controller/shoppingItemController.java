@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/shopping-items")
 public class shoppingItemController {
@@ -22,7 +24,7 @@ public class shoppingItemController {
     }
 
     @PostMapping
-    public ResponseEntity<shoppingItemResponseDTO> create(@RequestBody shoppingItemRequestDTO dto) {
+    public ResponseEntity<shoppingItemResponseDTO> create(@Valid @RequestBody shoppingItemRequestDTO dto) {
         shoppingItemResponseDTO created = shoppingItemService.create(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
@@ -45,7 +47,7 @@ public class shoppingItemController {
     @PutMapping("/{id}")
     public ResponseEntity<shoppingItemResponseDTO> update(
             @PathVariable UUID id,
-            @RequestBody shoppingItemRequestDTO dto) {
+            @Valid @RequestBody shoppingItemRequestDTO dto) {
         return ResponseEntity.ok(shoppingItemService.update(id, dto));
     }
 

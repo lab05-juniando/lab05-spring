@@ -2,6 +2,8 @@ package com.lab05.finances.shoppingList.service;
 
 import com.lab05.finances.shoppingList.entity.shoppingListEntity;
 import com.lab05.finances.shoppingList.repository.shoppingListRepository;
+import com.lab05.finances.exceptions.ResourceNotFoundException;
+import com.lab05.finances.exceptions.BusinessException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +23,7 @@ public class shoppingListService {
     @Transactional
     public shoppingListEntity create(UUID companyId) {
         if (shoppingListRepository.existsByCompanyId(companyId)) {
-            throw new IllegalStateException(
-                    "Já existe uma shopping list para a company com id: " + companyId);
+            throw new BusinessException("Já existe uma shopping list para a company com id: " + companyId);
         }
 
         shoppingListEntity entity = new shoppingListEntity(companyId);
@@ -32,7 +33,7 @@ public class shoppingListService {
     @Transactional(readOnly = true)
     public shoppingListEntity findById(UUID id) {
         return shoppingListRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Shopping list não encontrada com id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("ShoppingList", id));
     }
 
     @Transactional(readOnly = true)
@@ -48,7 +49,7 @@ public class shoppingListService {
     @Transactional
     public shoppingListEntity update(UUID id, UUID companyId) {
         shoppingListEntity entity = shoppingListRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Shopping list não encontrada com id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("ShoppingList", id));
 
         entity.setCompanyId(companyId);
 
@@ -58,7 +59,7 @@ public class shoppingListService {
     @Transactional
     public void delete(UUID id) {
         if (!shoppingListRepository.existsById(id)) {
-            throw new RuntimeException("Shopping list não encontrada com id: " + id);
+            throw new ResourceNotFoundException("ShoppingList", id);
         }
         shoppingListRepository.deleteById(id);
     }
